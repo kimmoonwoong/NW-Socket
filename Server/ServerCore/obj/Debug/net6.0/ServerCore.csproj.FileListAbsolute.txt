@@ -13,3 +13,11 @@ C:\Users\ansdn\source\repos\Server\ServerCore\obj\Debug\net6.0\refint\ServerCore
 C:\Users\ansdn\source\repos\Server\ServerCore\obj\Debug\net6.0\ServerCore.pdb
 C:\Users\ansdn\source\repos\Server\ServerCore\obj\Debug\net6.0\ServerCore.genruntimeconfig.cache
 C:\Users\ansdn\source\repos\Server\ServerCore\obj\Debug\net6.0\ref\ServerCore.dll
+C:\Users\ansdn\Networt-Programming\Server\ServerCore\obj\Debug\net6.0\ServerCore.csproj.AssemblyReference.cache
+C:\Users\ansdn\Networt-Programming\Server\ServerCore\obj\Debug\net6.0\ServerCore.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ansdn\Networt-Programming\Server\ServerCore\obj\Debug\net6.0\ServerCore.AssemblyInfoInputs.cache
+C:\Users\ansdn\Networt-Programming\Server\ServerCore\obj\Debug\net6.0\ServerCore.AssemblyInfo.cs
+C:\Users\ansdn\Networt-Programming\Server\ServerCore\obj\Debug\net6.0\ServerCore.csproj.CoreCompileInputs.cache
+C:\Users\ansdn\Networt-Programming\Server\ServerCore\obj\Debug\net6.0\ServerCore.dll
+C:\Users\ansdn\Networt-Programming\Server\ServerCore\obj\Debug\net6.0\refint\ServerCore.dll
+C:\Users\ansdn\Networt-Programming\Server\ServerCore\obj\Debug\net6.0\ServerCore.pdb

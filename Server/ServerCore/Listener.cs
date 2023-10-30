@@ -9,14 +9,16 @@ namespace ServerCore
     class Listener
     {
         Socket socket;
-        Action<Socket> onAcceptHandler;
-        public void init(IPEndPoint endPoint, Action<Socket> onAcceptHandle)
+        Func<Session> _sessionFactory;
+
+        private Session _session;
+        public void init(IPEndPoint endPoint, Func<Session> _sessionFactory)
         {
             socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(endPoint);
             socket.Listen(10);
 
-            onAcceptHandler += onAcceptHandle;
+            this._sessionFactory += _sessionFactory;
             SocketAsyncEventArgs args = new SocketAsyncEventArgs();
             args.Completed += new EventHandler<SocketAsyncEventArgs>(OnAcceptCompleted);
             RegisterAccept(args);
@@ -31,12 +33,14 @@ namespace ServerCore
             if (!pending)
                 OnAcceptCompleted(null, args);
         }
-
         void OnAcceptCompleted(object sender, SocketAsyncEventArgs args)
         {
             if (args.SocketError == SocketError.Success)
             {
-                onAcceptHandler.Invoke(args.AcceptSocket);
+                _session = _sessionFactory.Invoke();
+                _session.init(args.AcceptSocket);
+                _session.OnConnected(args.AcceptSocket.RemoteEndPoint);
+
             }
             else
             {
@@ -46,4 +50,3 @@ namespace ServerCore
             RegisterAccept(args);
         }
     }
-}

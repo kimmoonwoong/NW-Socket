@@ -2,32 +2,47 @@
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using static System.Collections.Specialized.BitVector32;
 
 namespace ServerCore
 {
+    class GameSession : Session
+    {
+        public override void OnConnected(EndPoint endPoint)
+        {
+            Console.WriteLine($"OnConnected : {endPoint}");
+
+            byte[] sendbuff = Encoding.UTF8.GetBytes("Welcome TO MMORPT Server");
+
+            //ss
+            Send(sendbuff);
+
+            Thread.Sleep(1000);
+
+            DisConnect();
+
+        }
+
+        public override void OnDisConnected(EndPoint endPoint)
+        {
+            Console.WriteLine($"OnDisConnected : {endPoint}");
+        }
+
+        public override void OnRecv(ArraySegment<byte> buffer)
+        {
+            string recData = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count); // 받은 메세지를 출력
+            Console.WriteLine("From Client : " + recData); // 
+        }
+
+        public override void OnSend(int numOfBuffer)
+        {
+            Console.WriteLine($"Transferred bytes: {numOfBuffer}");
+        }
+    }
+
     class ServerCoreMain
     {
         static Listener listener = new Listener();
-        static void OnAcceptHandler(Socket clintsocket)
-        {
-            try
-            {
-                byte[] sendbuff = Encoding.UTF8.GetBytes("Welcome TO MMORPT Server");
-                Session session = new Session();
-                session.init(clintsocket);
-
-                session.Send(sendbuff);
-
-                Thread.Sleep(1000);
-
-                session.DisConnect();
-                session.DisConnect();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
         static void Main(string[] args)
         {
             string host = Dns.GetHostName();
@@ -36,11 +51,11 @@ namespace ServerCore
             IPEndPoint endPoint = new IPEndPoint(iPAddress, 7777);
             // 비동기적으로 처리
 
-            listener.init(endPoint, OnAcceptHandler);
+            listener.init(endPoint, () => { return new GameSession(); });
             Console.WriteLine("Listening...");
             while (true)
             {
-
+                    
             }
         }
     }

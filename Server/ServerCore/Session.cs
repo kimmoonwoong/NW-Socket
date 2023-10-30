@@ -5,53 +5,62 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Threading;
+using System.Net;
+
 namespace ServerCore
 {
-    class Session
+    abstract class Session
     {
         Socket socket;
         int _disconnected = 0;
-        SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs();
-        Queue<byte[]> sendQueue = new Queue<byte[]>();
-        List<ArraySegment<byte>> pendinglist = new List<ArraySegment<byte>>();
+        SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs(); // Event(메서드) 실행(Action과도 같음)
+        Queue<byte[]> sendQueue = new Queue<byte[]>(); // Register에 누군가 들어가 있으면 queue에 쌓아 놓았다가 한번에 보냄
+        List<ArraySegment<byte>> pendinglist = new List<ArraySegment<byte>>(); // 메세지 모음
 
-        object _lock = new object();
+        object _lock = new object(); // 멀티 쓰레드 환경에서 동기화 문제를 해결하기 위해 사용
+
+        public abstract void OnConnected(EndPoint endPoint);// 연결 됐을 때
+        public abstract void OnRecv(ArraySegment<byte> buffer);  // 성공적으로 받았을 때
+        public abstract void OnSend(int numOfBuffer); // 성공적으로 보냈을 때
+        public abstract void OnDisConnected(EndPoint endPoint);
         public void init(Socket _socket)
         {
             socket = _socket;
-            SocketAsyncEventArgs recyArgs = new SocketAsyncEventArgs();
-            recyArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnRecyComplited);
             
-            recyArgs.SetBuffer(new byte[1024], 0, 1024);
-            sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendComplit);
+            SocketAsyncEventArgs recyArgs = new SocketAsyncEventArgs();
+            recyArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnRecyComplited); // Receivy가 성공적으로 끝나면 OnRecyComplited 메서드를 실행
+            recyArgs.SetBuffer(new byte[1024], 0, 1024); // 받는 버퍼를 1024크기로 설정 및 시작지점과 끝 지점 설정
 
-            RegisterRecy(recyArgs);
+            sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendComplit); // Send가 성공적으로 끝나면 OnSendComplit 메서드 실행
+
+            RegisterRecy(recyArgs); // 받는 크기가 정해져있고, 그 순간마다 달라지는 것은 없기에 실행시켜도 문제 없음
 
         }
 
-        public void DisConnect()
+        public void DisConnect() // 연결 해제
         {
-            if (Interlocked.Exchange(ref _disconnected, 1) == 1)
+            if (Interlocked.Exchange(ref _disconnected, 1) == 1) // 여러 사용자가 동시다발적으로 disconnect를 할 수 있기에 해제 중이면 return시킴
                 return;
 
+
+            OnDisConnected(socket.RemoteEndPoint);
             socket.Shutdown(SocketShutdown.Both);
             socket.Close();
         }
         #region 네트워크 Recevy
         void RegisterRecy(SocketAsyncEventArgs args)
         {
-            bool pending = socket.ReceiveAsync(args);
-            if (!pending) OnRecyComplited(null, args);
+            bool pending = socket.ReceiveAsync(args); // 비동기적으로 Recive
+            if (!pending) OnRecyComplited(null, args); // 만약 바로 들어갈 수 있다면 컴플리트 실행. 안 되더라도 위에서 Complit이 되면 Action되게 설정
 
         }
         void OnRecyComplited(object sent, SocketAsyncEventArgs args)
         {
-            if(args.BytesTransferred > 0 && args.SocketError == SocketError.Success)
+            if(args.BytesTransferred > 0 && args.SocketError == SocketError.Success) // 성공적으로 끝났고, byte가 0이 아니면(byte가 0인 경우는 유저가 의도적으로 서버를 공격할 때를 의미) 
             {
                 try
                 {
-                    string recData = Encoding.UTF8.GetString(args.Buffer, args.Offset, args.BytesTransferred);
-                    Console.WriteLine("From Client : " + recData);
+                    OnRecv(new ArraySegment<byte>(args.Buffer, args.Offset, args.BytesTransferred));
                     RegisterRecy(args);
                 }
                 catch(Exception e) 
@@ -62,7 +71,7 @@ namespace ServerCore
             }
             else
             {
-                DisConnect();
+                DisConnect(); // 오류가 있는 상황이기에 DisConnect(연결 해제)
             }
         }
         #endregion
@@ -104,8 +113,9 @@ namespace ServerCore
                     sendArgs.BufferList = null;
                     pendinglist.Clear();
 
-                    Console.WriteLine($"Transferred bytes: {sendArgs.BytesTransferred}");
+                    OnSend(sendArgs.BytesTransferred);
 
+                    
                     if(sendQueue.Count > 0)
                         RegisterSend();
                     
@@ -117,5 +127,5 @@ namespace ServerCore
             }
         }
         #endregion
-    }
+    }   
 }
