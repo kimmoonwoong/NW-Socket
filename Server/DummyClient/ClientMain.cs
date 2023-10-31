@@ -3,9 +3,41 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading;
+using ServerCore;
 
 namespace DummyClient
 {
+    class GameSession : Session
+    {
+        public override void OnConnected(EndPoint endPoint)
+        {
+            Console.WriteLine($"OnConnected : {endPoint}");
+
+            
+            
+            byte[] sendbuff = Encoding.UTF8.GetBytes($"Hello World!\n");
+            Send(sendbuff);
+
+        }
+
+        public override void OnDisConnected(EndPoint endPoint)
+        {
+            Console.WriteLine($"OnDisConnected : {endPoint}");
+        }
+
+        public override void OnRecv(ArraySegment<byte> buffer)
+        {
+            string recData = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count); // 받은 메세지를 출력
+            Console.WriteLine("From Server : " + recData); // 
+        }
+
+        public override void OnSend(int numOfBuffer)
+        {
+            Console.WriteLine($"Transferred bytes: {numOfBuffer}");
+        }
+    }
+
+
     class ClientMain
     {
         static void Main(string[] args)
@@ -15,29 +47,13 @@ namespace DummyClient
             IPAddress iPAddress = iPHost.AddressList[0];
             IPEndPoint endPoint = new IPEndPoint(iPAddress, 7777);
 
-
-
+            
             while (true)
             {
-                Socket socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
                 try
                 {
-                    //입장 문의
-                    socket.Connect(endPoint);
-
-                    Console.WriteLine("Connected to" + socket.RemoteEndPoint.ToString());
-                    for (int i = 0; i < 5; i++)
-                    {
-                        byte[] sendbuff = Encoding.UTF8.GetBytes($"Hello World! {i}\n");
-                        int sendbyte = socket.Send(sendbuff);
-                    }
-                    byte[] recvbuff = new byte[1024];
-                    int recvbyte = socket.Receive(recvbuff);
-                    string recvData = Encoding.UTF8.GetString(recvbuff, 0, recvbyte);
-                    Console.WriteLine("From Server" + recvData);
-                    socket.Shutdown(SocketShutdown.Both);
-                    socket.Close();
+                    Connector connector = new Connector();
+                    connector.Connect(endPoint, () => { return new GameSession(); });
                 }
                 catch (Exception e)
                 {
