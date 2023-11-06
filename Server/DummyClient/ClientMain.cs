@@ -7,15 +7,25 @@ using ServerCore;
 
 namespace DummyClient
 {
-    class GameChatingSession : Session
+
+    /*class GameInventorySession : Session
     {
         public override void OnConnected(EndPoint endPoint)
         {
             Console.WriteLine($"OnConnected : {endPoint}");
 
-            
-            
-            byte[] sendbuff = Encoding.UTF8.GetBytes($"Hello Chating Server!\n");
+
+            Packet packet = new Packet() { size = 4, packetId = 7 };
+
+
+            ArraySegment<byte> openSegment = SendBufferHelper.Open(4096);
+            byte[] buffer = BitConverter.GetBytes(packet.size);
+            byte[] buffer2 = BitConverter.GetBytes(packet.packetId);
+
+            Array.Copy(buffer, 0, openSegment.Array, openSegment.Offset, buffer.Length);
+            Array.Copy(buffer2, 0, openSegment.Array, openSegment.Offset + buffer.Length, buffer2.Length);
+
+            ArraySegment<byte> sendbuff = SendBufferHelper.Close(packet.size);
             Send(sendbuff);
 
         }
@@ -36,37 +46,7 @@ namespace DummyClient
         {
             Console.WriteLine($"Transferred bytes: {numOfBuffer}");
         }
-    }
-
-    class GameInventorySession : Session
-    {
-        public override void OnConnected(EndPoint endPoint)
-        {
-            Console.WriteLine($"OnConnected : {endPoint}");
-
-
-            byte[] sendbuff = Encoding.UTF8.GetBytes($"Hello Inventory Server!\n");
-            Send(sendbuff);
-
-        }
-
-        public override void OnDisConnected(EndPoint endPoint)
-        {
-            Console.WriteLine($"OnDisConnected : {endPoint}");
-        }
-
-        public override int OnRecv(ArraySegment<byte> buffer)
-        {
-            string recData = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count); // 받은 메세지를 출력
-            Console.WriteLine("From Server : " + recData); // 
-            return buffer.Count;
-        }
-
-        public override void OnSend(int numOfBuffer)
-        {
-            Console.WriteLine($"Transferred bytes: {numOfBuffer}");
-        }
-    }
+    }*/
 
     class ClientMain
     {
@@ -85,12 +65,12 @@ namespace DummyClient
                     Connector connector = new Connector();
                     if (cnt % 2 == 0)
                     {
-                        connector.Connect(endPoint, () => { return new GameChatingSession(); });
+                        connector.Connect(endPoint, () => { return new ServerSession(); });
                     }
-                    else
+                    /*else
                     {
                         connector.Connect(inventoryendPoint, () => { return new GameInventorySession(); });
-                    }
+                    }*/
                 }
                 catch (Exception e)
                 {

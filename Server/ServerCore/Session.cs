@@ -9,6 +9,35 @@ using System.Net;
 
 namespace ServerCore
 {
+    public abstract class PacketSession: Session
+    {
+        public static readonly int HeadSize = 2;
+        public sealed override int OnRecv(ArraySegment<byte> buffer)
+        {
+            int processLen = 0;
+
+            while (true)
+            {
+                // 최소한 헤더는 파싱 할 수 있어야 한다.
+                if (buffer.Count < HeadSize) break;
+
+                ushort size = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
+
+                if (buffer.Count < size) break;
+
+                // 패킷 재조립
+                OnRecvPacket(new ArraySegment<byte>(buffer.Array, buffer.Offset, size));
+
+                processLen += size;
+                buffer = new ArraySegment<byte>(buffer.Array, buffer.Offset + size, buffer.Count - size);
+
+            }
+            return processLen;
+        }
+
+        public abstract void OnRecvPacket(ArraySegment<byte> buffer);
+    }
+
     public abstract class Session
     {
         Socket socket;
