@@ -8,21 +8,73 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    class Packet
+    public abstract class Packet
     {
         public ushort size;
         public ushort packetId;
+        public abstract ArraySegment<byte> Write();
+        public abstract void Read(ArraySegment<byte> array);
     }
 
     class PlayerinfoReq : Packet
     {
         public long playerId;
-    }
+        public string name;
 
-    class PlayerinfoOk : Packet
-    {
-        public int hp;
-        public int attack;
+        public PlayerinfoReq()
+        {
+            this.packetId = (ushort)PacketID.PlayerinfoReq;
+        }
+        public override ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+
+            ushort count = 0;
+            bool success = true;
+
+            Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+            count += sizeof(ushort);
+
+            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.packetId);
+            count += sizeof(ushort);
+
+            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.playerId);
+            count += sizeof(long);
+
+            ushort nameLen = (ushort)Encoding.Unicode.GetByteCount(name);
+            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), nameLen);
+            count += sizeof(ushort);
+
+            Array.Copy(Encoding.Unicode.GetBytes(this.name), 0, segment.Array, count, nameLen);
+            count += nameLen;
+
+            success &= BitConverter.TryWriteBytes(s, count);
+
+
+
+            if (!success) return null;
+
+            return SendBufferHelper.Close(count);
+
+        }
+        public override void Read(ArraySegment<byte> buffer)
+        {
+            ushort count = 0;
+
+            ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(buffer.Array, buffer.Offset, buffer.Count); ;
+
+            count += sizeof(ushort);
+            count += sizeof(ushort);
+
+
+            this.playerId = BitConverter.ToInt64(s.Slice(count, s.Length - count));
+            count += sizeof(long);
+
+            ushort nameLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+            count += sizeof(ushort);
+            this.name = Encoding.Unicode.GetString(s.Slice(count, nameLen));
+        }
     }
 
     public enum PacketID
@@ -39,7 +91,7 @@ namespace Server
             Console.WriteLine($"OnConnected : {endPoint}, Count : {cnt}");
 
 
-            Packet packet = new Packet() { size = 100, packetId = 10 };
+            //Packet packet = new Packet() { size = 100, packetId = 10 };
 
 
             /*ArraySegment<byte> openSegment = SendBufferHelper.Open(4096);
@@ -72,9 +124,10 @@ namespace Server
             switch ((PacketID)packetId)
             {
                 case PacketID.PlayerinfoReq:
-                    long playerId = BitConverter.ToInt64(buffer.Array, buffer.Offset + count);
-                    count += 8;
-                    Console.WriteLine($"PlayerId : {playerId}");
+
+                    PlayerinfoReq p = new PlayerinfoReq();
+                    p.Read(buffer);
+                    Console.WriteLine($"PlayerId : {p.playerId}, PlayerName : {p.name}");
                     break;
             }
             Console.WriteLine($"PacketSize : {size}, PacketId : {packetId}");

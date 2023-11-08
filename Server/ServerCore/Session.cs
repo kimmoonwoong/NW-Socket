@@ -81,7 +81,7 @@ namespace ServerCore
         {
             recvBuffer.Clean();
             ArraySegment<byte> segment = recvBuffer.RecvSegment;
-            args.SetBuffer(segment.Array, segment.Offset, segment.Count);
+            recyArgs.SetBuffer(segment.Array, segment.Offset, segment.Count);
 
             bool pending = socket.ReceiveAsync(args); // 비동기적으로 Recive
             if (!pending) OnRecyComplited(null, args); // 만약 바로 들어갈 수 있다면 컴플리트 실행. 안 되더라도 위에서 Complit이 되면 Action되게 설정

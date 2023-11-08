@@ -77,7 +77,7 @@ namespace DummyClient
                     Console.WriteLine(e.ToString());
                 }
                 cnt++;
-                Thread.Sleep(1000);
+                Thread.Sleep(5000);
             }
         }
     }
