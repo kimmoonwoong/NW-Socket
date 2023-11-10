@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,8 +37,8 @@ namespace DummyClient
             bool success = true;
 
             Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);  
-
-            count += sizeof(ushort);
+            
+            count += (ushort)Marshal.SizeOf(count);
             /*
              * 여기서 Array.Copy가 아닌 TryWriteBytes를 쓰는 이유
              * Array.Copy를 사용하면 new를 통해 새로운 객체를 만들어서 복사하는 작업을 함
@@ -45,10 +46,10 @@ namespace DummyClient
              * 그렇기에 TryWriteByte가 더 효율적이다.
              */
             success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.packetId);
-            count += sizeof(ushort);
+            count += (ushort)Marshal.SizeOf(this.packetId);
 
             success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.playerId);
-            count += sizeof(long);
+            count += (ushort)Marshal.SizeOf(this.playerId);
 
 
             /*
