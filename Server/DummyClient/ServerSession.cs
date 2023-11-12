@@ -101,7 +101,7 @@ namespace DummyClient
 
 
 
-            PlayerinfoReq packet = (PlayerinfoReq)PacketManager.Instance.GetPacket(PacketID.PlayerinfoReq);
+            PlayerinfoReq packet = (PlayerinfoReq)PacketManager.Instance.GetPacket(PacketID.PlayerinfoReq, 1001, "ABCD");
 
             ArraySegment<byte> sendbuff = packet.Write();
 

@@ -90,18 +90,19 @@ namespace ServerCore
             _packet.Initialise(_packet);
         }
 
-        public Packet GetPacket(PacketID packetID)
+        public Packet GetPacket(PacketID packetID, int _playerID, string _name)
         {
             if(packetID == PacketID.PlayerinfoReq)
             {
-                if (_playerinfoReqPacket == null) CreatePacket(packetID);
-                return _playerinfoReqPacket;
+                return new PlayerinfoReq() { playerId = _playerID, name = _name};
             }
             return null;
         }
-        public void CreatePacket(PacketID packetID)
+        public Packet GetPacket(PacketID packetID)
         {
-            if (packetID == PacketID.PlayerinfoReq) _playerinfoReqPacket = new PlayerinfoReq() { playerId = 1001, name = "ABCD" };
+            if (packetID == PacketID.PlayerinfoReq)
+                return new PlayerinfoReq();
+            return null;
         }
     }
 }
