@@ -37,12 +37,36 @@ namespace PacketGenerator
             string packetname = r["name"];
             if (packetname == null) return;
 
-            ParsMembers();
+            ParsMembers(r);
         }
         
-        public static void ParsMembers()
+        public static void ParsMembers(XmlReader r)
         {
+            string packetname = r["name"];
+            int depth = r.Depth + 1;
+            while (r.Read()) {
+                if (r.Depth != depth) break;
 
+                string memberName = r["name"];
+                if(memberName == null) return;
+
+                string memerType = r.Name.ToLower();
+                switch(memberName)
+                {
+                    case "bool":
+                    case "byte":
+                    case "int":
+                    case "short":
+                    case "ushort":
+                    case "long":
+                    case "string":
+                    case "float":
+                    case "double":
+                    case "list":
+                        break;
+                    default: break;
+                }
+            }
         }
     }
 }
