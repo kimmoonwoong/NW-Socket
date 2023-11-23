@@ -11,6 +11,7 @@ namespace ServerCore
     {
         public long playerId;
         public string name;
+        public object skiles;
 
         public PlayerinfoReq()
         {
