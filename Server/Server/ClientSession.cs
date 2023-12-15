@@ -10,15 +10,59 @@ using System.Threading.Tasks;
 namespace Server
 {
 
+
+    using ServerCore;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Runtime.InteropServices;
+    using System.Text;
+
+    public enum PacketID
+    {
+
+        PlayerInfoReq = 0,
+
+        Test = 1,
+
+    }
+
+
     class PlayerInfoReq
     {
+        public byte Testbyte;
         public long playerId;
         public string name;
-        public struct Skile
+        public class Skile
         {
             public int id;
             public short level;
             public float duration;
+            public class Attribute
+            {
+                public int att;
+                public bool Write(Span<byte> s, ref ushort count)
+                {
+                    bool success = true;
+
+                    success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), att);
+                    count += sizeof(int);
+
+                    return success;
+                }
+
+                public void Read(ReadOnlySpan<byte> s, ref ushort count)
+                {
+
+                    this.att = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+                    count += sizeof(int);
+
+                }
+            }
+
+            public List<Attribute> attributes = new List<Attribute>();
+
             public bool Write(Span<byte> s, ref ushort count)
             {
                 bool success = true;
@@ -33,6 +77,12 @@ namespace Server
 
                 success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), duration);
                 count += sizeof(float);
+
+
+                success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)this.attributes.Count);
+                count += sizeof(ushort);
+                foreach (Attribute attribute in this.attributes)
+                    success &= attribute.Write(s, ref count);
 
                 return success;
             }
@@ -50,6 +100,17 @@ namespace Server
 
                 this.duration = BitConverter.ToSingle(s.Slice(count, s.Length - count));
                 count += sizeof(float);
+
+
+                this.attributes.Clear();
+                ushort attributeLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+                count += sizeof(ushort);
+                for (int i = 0; i < attributeLen; i++)
+                {
+                    Attribute attribute = new Attribute();
+                    attribute.Read(s, ref count);
+                    attributes.Add(attribute);
+                }
 
             }
         }
@@ -78,6 +139,10 @@ namespace Server
                 */
             success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.PlayerInfoReq);
             count += sizeof(ushort);
+
+
+            segment[segment.Offset + count] = this.Testbyte;
+            count += sizeof(byte);
 
 
             success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), playerId);
@@ -114,6 +179,10 @@ namespace Server
             count += sizeof(ushort);
             count += sizeof(ushort);
 
+            this.Testbyte = buffer.Array[buffer.Offset + count];
+            count += sizeof(byte);
+
+
             this.playerId = BitConverter.ToInt64(s.Slice(count, s.Length - count));
             count += sizeof(long);
 
@@ -135,12 +204,6 @@ namespace Server
             }
 
         }
-    }
-
-    public enum PacketID
-    {
-        PlayerInfoReq = 1,
-        PlayerinfoOk = 2,
     }
 
     class ClientSession : PacketSession

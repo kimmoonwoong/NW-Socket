@@ -6,8 +6,17 @@ namespace PacketGenerator
     class Program
     {
         static string genPackets;
+        static ushort packetId;
+        static string enumPackets;
         static void Main(string[] args)
         {
+
+            string pdlPath = "PDL.xml";
+
+            if(args.Length >= 1)
+                pdlPath = args[0];
+
+
             XmlReaderSettings settings = new XmlReaderSettings()
             {
                 IgnoreComments = true,
@@ -15,7 +24,7 @@ namespace PacketGenerator
             };
 
 
-            using (XmlReader r = XmlReader.Create("PDL.xml", settings))
+            using (XmlReader r = XmlReader.Create(pdlPath, settings))
             {
                 r.MoveToContent();
 
@@ -28,7 +37,9 @@ namespace PacketGenerator
                     Console.WriteLine(r.Name + " " + r["name"]);
                 }
 
-                File.WriteAllText("GenPackets.cs", genPackets);
+                 string fileText =  string.Format(PacketFormat.fileFormat, enumPackets, genPackets);
+
+                File.WriteAllText("GenPackets.cs", fileText);
             }
         }
         public static void ParsePacket(XmlReader r)
@@ -42,6 +53,7 @@ namespace PacketGenerator
 
             Tuple<string, string, string> t =  ParsMembers(r);
             genPackets += string.Format(PacketFormat.packetFormat, packetname, t.Item1, t.Item2, t.Item3);
+            enumPackets += string.Format(PacketFormat.packetEnumFormat, packetname, packetId++);
         }
 
 
@@ -73,8 +85,13 @@ namespace PacketGenerator
                 string memerType = r.Name.ToLower();
                 switch(memerType)
                 {
-                    case "bool":
                     case "byte":
+                    case "sbyte":
+                        membercode += string.Format(PacketFormat.memerFormat, memerType, memberName);
+                        readcode += string.Format(PacketFormat.readByteFormat, memberName, memerType);
+                        writecode += string.Format(PacketFormat.writeByteFormat, memberName, memerType);
+                        break;
+                    case "bool":
                     case "int":
                     case "short":
                     case "ushort":
