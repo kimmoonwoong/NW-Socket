@@ -10,8 +10,7 @@ namespace PacketGenerator
         static string enumPackets;
         static void Main(string[] args)
         {
-
-            string pdlPath = "PDL.xml";
+            string pdlPath = "../../../PDL.xml";
 
             if(args.Length >= 1)
                 pdlPath = args[0];
