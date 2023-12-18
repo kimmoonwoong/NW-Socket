@@ -10,14 +10,20 @@ using System.Text;
 public enum PacketID
 {
     
-    PlayerInfoReq = 0,
+    C_PlayerInfoReq = 0,
 
-    Test = 1,
+    S_Test = 1,
 
+}
+interface IPacket
+{
+	ushort Protocol { get; }
+	void Read(ArraySegment<byte> buffer);
+	ArraySegment<byte> Write();
 }
 
 
-class PlayerInfoReq
+class C_PlayerInfoReq : IPacket
 {
     public byte Testbyte;
 	public long playerId;
@@ -106,6 +112,8 @@ class PlayerInfoReq
 	public List <Skile> skiles = new List<Skile> ();
 	
 
+    public ushort Protocol { get { return (ushort)PacketID.C_PlayerInfoReq; } }
+
     /*
         * 모든 Packet에서 쓰는 것, 읽는 것 모두 동일하게 작업하므로 클래스의 메서드화
         */
@@ -125,7 +133,7 @@ class PlayerInfoReq
             * 하지만 TryWriteByte는 span 클래스, 즉 어떤 array에 직접 쓰는 것으로 작업을 한다.
             * 그렇기에 TryWriteByte가 더 효율적이다.
             */
-        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.PlayerInfoReq);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.C_PlayerInfoReq);
         count += sizeof(ushort);
 
         
@@ -195,9 +203,11 @@ class PlayerInfoReq
 }
 
 
-class Test
+class S_Test : IPacket
 {
     public int Testint;
+
+    public ushort Protocol { get { return (ushort)PacketID.S_Test; } }
 
     /*
         * 모든 Packet에서 쓰는 것, 읽는 것 모두 동일하게 작업하므로 클래스의 메서드화
@@ -218,7 +228,7 @@ class Test
             * 하지만 TryWriteByte는 span 클래스, 즉 어떤 array에 직접 쓰는 것으로 작업을 한다.
             * 그렇기에 TryWriteByte가 더 효율적이다.
             */
-        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.Test);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.S_Test);
         count += sizeof(ushort);
 
         

@@ -60,10 +60,13 @@ namespace Server
 
     class Program
     {
+
         static Listener chainglistener = new Listener();
         static Listener inventorylistener = new Listener();
         static void Main(string[] args)
         {
+            PacketManager.Instance.Register();
+
             string host = Dns.GetHostName();
             IPHostEntry iPHost = Dns.GetHostEntry(host);
             IPAddress iPAddress = iPHost.AddressList[0];

@@ -15,9 +15,15 @@ public enum PacketID
     Test = 1,
 
 }
+interface IPacket
+{
+	ushort Protocol { get; }
+	void Read(ArraySegment<byte> buffer);
+	ArraySegment<byte> Write();
+}
 
 
-class PlayerInfoReq
+class PlayerInfoReq : IPacket
 {
     public byte Testbyte;
 	public long playerId;
@@ -105,6 +111,8 @@ class PlayerInfoReq
 	
 	public List <Skile> skiles = new List<Skile> ();
 	
+
+    public ushort Protocol { get { return (ushort)PacketID.PlayerInfoReq; } }
 
     /*
         * 모든 Packet에서 쓰는 것, 읽는 것 모두 동일하게 작업하므로 클래스의 메서드화
@@ -195,9 +203,11 @@ class PlayerInfoReq
 }
 
 
-class Test
+class Test : IPacket
 {
     public int Testint;
+
+    public ushort Protocol { get { return (ushort)PacketID.Test; } }
 
     /*
         * 모든 Packet에서 쓰는 것, 읽는 것 모두 동일하게 작업하므로 클래스의 메서드화
