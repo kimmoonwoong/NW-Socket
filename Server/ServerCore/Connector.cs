@@ -18,18 +18,21 @@ namespace ServerCore
 
         Func<Session> _sessionFactory;
 
-        public void Connect(IPEndPoint endPoint, Func<Session> _sessionFactory) { 
-            Socket socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        public void Connect(IPEndPoint endPoint, Func<Session> _sessionFactory, int count = 1) {
+            for (int i = 0; i < count; i++)
+            {
+                Socket socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-            args.Completed += OnConnectComplit;
-            args.RemoteEndPoint = endPoint;
+                SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+                args.Completed += OnConnectComplit;
+                args.RemoteEndPoint = endPoint;
 
-            args.UserToken = socket;
+                args.UserToken = socket;
 
-            this._sessionFactory = _sessionFactory;
+                this._sessionFactory = _sessionFactory;
 
-            RegisterConnect(args);
+                RegisterConnect(args);
+            }
         }
 
         void RegisterConnect(SocketAsyncEventArgs args)

@@ -66,6 +66,14 @@ namespace ServerCore
 
         }
 
+        public void Clear()
+        {
+            lock (_lock)
+            {
+                pendinglist.Clear();
+                sendQueue.Clear();
+            }
+        }
         public void DisConnect() // 연결 해제
         {
             if (Interlocked.Exchange(ref _disconnected, 1) == 1) // 여러 사용자가 동시다발적으로 disconnect를 할 수 있기에 해제 중이면 return시킴
@@ -75,17 +83,26 @@ namespace ServerCore
             OnDisConnected(socket.RemoteEndPoint);
             socket.Shutdown(SocketShutdown.Both);
             socket.Close();
+            Clear();
         }
         #region 네트워크 Recevy
         void RegisterRecy(SocketAsyncEventArgs args)
         {
+            if (_disconnected == 1) return;
+
             recvBuffer.Clean();
             ArraySegment<byte> segment = recvBuffer.RecvSegment;
             recyArgs.SetBuffer(segment.Array, segment.Offset, segment.Count);
 
-            bool pending = socket.ReceiveAsync(args); // 비동기적으로 Recive
-            if (!pending) OnRecyComplited(null, args); // 만약 바로 들어갈 수 있다면 컴플리트 실행. 안 되더라도 위에서 Complit이 되면 Action되게 설정
-
+            try
+            {
+                bool pending = socket.ReceiveAsync(args); // 비동기적으로 Recive
+                if (!pending) OnRecyComplited(null, args); // 만약 바로 들어갈 수 있다면 컴플리트 실행. 안 되더라도 위에서 Complit이 되면 Action되게 설정
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine($"Recv Failed {e.ToString}");
+            }
         }
         void OnRecyComplited(object sent, SocketAsyncEventArgs args)
         {
@@ -149,16 +166,26 @@ namespace ServerCore
 
         void RegisterSend()
         {
+            if (_disconnected == 1)
+                return;
+
             while(sendQueue.Count() > 0)
             {
                 ArraySegment<byte> buff = sendQueue.Dequeue();
                 pendinglist.Add(buff);
             }
             sendArgs.BufferList = pendinglist;
-            bool pending = socket.SendAsync(sendArgs);
-            if (!pending)
-                OnSendComplit(null, sendArgs);
 
+            try
+            {
+                bool pending = socket.SendAsync(sendArgs);
+                if (!pending)
+                    OnSendComplit(null, sendArgs);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine($"Send Failed {e.ToString}");
+            }
 
         }
         void OnSendComplit(object send, SocketAsyncEventArgs args)

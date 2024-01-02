@@ -57,27 +57,21 @@ namespace DummyClient
             IPAddress iPAddress = iPHost.AddressList[0];
             IPEndPoint endPoint = new IPEndPoint(iPAddress, 7777);
             IPEndPoint inventoryendPoint = new IPEndPoint(iPAddress, 5555);
-            int cnt = 0;
+
+            Connector connector = new Connector();
+            connector.Connect(endPoint, () => { return SessionManager.Instance.Generator(); }, 10);
+
             while (true)
             {
                 try
                 {
-                    Connector connector = new Connector();
-                    if (cnt % 2 == 0)
-                    {
-                        connector.Connect(endPoint, () => { return new ServerSession(); });
-                    }
-                    /*else
-                    {
-                        connector.Connect(inventoryendPoint, () => { return new GameInventorySession(); });
-                    }*/
+                    SessionManager.Instance.SendForEach();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e.ToString());
                 }
-                cnt++;
-                Thread.Sleep(5000);
+                Thread.Sleep(250);
             }
         }
     }

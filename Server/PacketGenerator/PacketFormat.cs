@@ -38,15 +38,13 @@ interface IPacket
 @"
 class PacketManager
 {{
-    static PacketManager _instance;
+    static PacketManager _instance = new PacketManager();
 
-    public static PacketManager Instance
+    public static PacketManager Instance{{ get {{ return _instance; }} }}
+
+    PacketManager()
     {{
-        get
-        {{
-            if (_instance == null) _instance = new PacketManager();
-            return _instance;
-        }}
+        Register();
     }}
 
     Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>> _onRecv = new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>>();
