@@ -80,7 +80,7 @@ class PacketManager
 ";
         // {0} : 패킷 이름
         public static string packetRegisterFormat =
-@"  _onRecv.Add((ushort)PacketID.{0}, MakePacket<{0}>);
+@"  	_onRecv.Add((ushort)PacketID.{0}, MakePacket<{0}>);
         _handler.Add((ushort)PacketID.{0}, PacketHandler.{0}Handler);
 ";
         
