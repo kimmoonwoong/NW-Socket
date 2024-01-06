@@ -29,8 +29,8 @@ namespace Server
         {
             Console.WriteLine($"OnConnected : {endPoint}");
 
-
-            Program.Room.Enter(this);
+            GameRoom Room = Program.Room;
+            Room.Push(() => { Room.Enter(this); });
         }
         public override void OnRecvPacket(ArraySegment<byte> buffer)
         {
@@ -43,7 +43,7 @@ namespace Server
             Console.WriteLine($"OnDisConnected : {endPoint}");
             if(room != null)
             {
-                room.Lever(this);
+                room.Push(() => { room.Lever(this); });
                 room = null;
             }
             SessionManager.Instance.Remove(this);

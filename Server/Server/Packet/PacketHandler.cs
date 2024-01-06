@@ -13,9 +13,9 @@ class PacketHandler
     {
         C_Chat p = packet as C_Chat;
         ClientSession clientSession = session as ClientSession;
+        GameRoom room = clientSession.room;
+        if (room == null) return;
 
-        if (clientSession.room == null) return;
-
-        clientSession.room.Brodcast(clientSession, p.chat);
+        room.Push(() => { room.Brodcast(clientSession, p.chat); });
     }
 }
