@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "uAiUTGNRSxXOnRIHH6NQF76UqhtPwyqsLl+BVJZEp8CuLGB3V2ZUQqvehLLgW9pft3WAIu/PFfbrZvlp4VeGCQ==",
+  "dgSpecHash": "5cJIWDITrIaTMtLVfvOOLJrDgl0vBm1pbFJLlpoESsByaypsuOPyGe7FDjHGvzf9Xa9H1cFKXXt6AGpjdzTnZg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\ansdn\\source\\repos\\Server\\ServerCore\\ServerCore.csproj",
+  "projectFilePath": "C:\\Users\\user\\NW-Socket-GameServer\\Server\\ServerCore\\ServerCore.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

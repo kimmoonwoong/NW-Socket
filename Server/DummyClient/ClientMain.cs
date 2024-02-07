@@ -59,7 +59,7 @@ namespace DummyClient
             IPEndPoint inventoryendPoint = new IPEndPoint(iPAddress, 5555);
 
             Connector connector = new Connector();
-            connector.Connect(endPoint, () => { return SessionManager.Instance.Generator(); }, 10);
+            connector.Connect(endPoint, () => { return SessionManager.Instance.Generator(); }, 100);
 
             while (true)
             {

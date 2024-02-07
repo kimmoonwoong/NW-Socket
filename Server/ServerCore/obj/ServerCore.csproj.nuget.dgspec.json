@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ansdn\\source\\repos\\Server\\ServerCore\\ServerCore.csproj": {}
+    "C:\\Users\\user\\NW-Socket-GameServer\\Server\\ServerCore\\ServerCore.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ansdn\\source\\repos\\Server\\ServerCore\\ServerCore.csproj": {
+    "C:\\Users\\user\\NW-Socket-GameServer\\Server\\ServerCore\\ServerCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ansdn\\source\\repos\\Server\\ServerCore\\ServerCore.csproj",
+        "projectUniqueName": "C:\\Users\\user\\NW-Socket-GameServer\\Server\\ServerCore\\ServerCore.csproj",
         "projectName": "ServerCore",
-        "projectPath": "C:\\Users\\ansdn\\source\\repos\\Server\\ServerCore\\ServerCore.csproj",
-        "packagesPath": "C:\\Users\\ansdn\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ansdn\\source\\repos\\Server\\ServerCore\\obj\\",
+        "projectPath": "C:\\Users\\user\\NW-Socket-GameServer\\Server\\ServerCore\\ServerCore.csproj",
+        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\user\\NW-Socket-GameServer\\Server\\ServerCore\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ansdn\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -55,7 +55,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "wdxtYBXIhJNT/DeL9+/qivcOFX+SSX5SiYGRdJbaMIYM4oruvBB/leIQZv4kjEXLef/iP6n2+2/v9XsiVD7CEg==",
+  "dgSpecHash": "DmSMD9jMmZTYe94gIt5qsSwPsaGJAb2fbsmzFLjx7AAKgfWSnXoYSBcfc3YCnEgqkqwcJOsOqyrwLun72eSI/A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\ansdn\\source\\repos\\Server\\PacketGenerator\\PacketGenerator.csproj",
+  "projectFilePath": "C:\\Users\\user\\NW-Socket-GameServer\\Server\\PacketGenerator\\PacketGenerator.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

@@ -15,7 +15,7 @@ namespace ServerCore
         public sealed override int OnRecv(ArraySegment<byte> buffer)
         {
             int processLen = 0;
-
+            int packetCount = 0;
             while (true)
             {
                 // 최소한 헤더는 파싱 할 수 있어야 한다.
@@ -27,11 +27,12 @@ namespace ServerCore
 
                 // 패킷 재조립
                 OnRecvPacket(new ArraySegment<byte>(buffer.Array, buffer.Offset, size));
-
+                packetCount++;
                 processLen += size;
                 buffer = new ArraySegment<byte>(buffer.Array, buffer.Offset + size, buffer.Count - size);
 
             }
+            if (packetCount > 1) Console.WriteLine($"패킷 모아보내기 {packetCount}");
             return processLen;
         }
 
@@ -47,7 +48,7 @@ namespace ServerCore
         List<ArraySegment<byte>> pendinglist = new List<ArraySegment<byte>>(); // 메세지 모음
         SocketAsyncEventArgs recyArgs = new SocketAsyncEventArgs();
 
-        RecvBuffer recvBuffer = new RecvBuffer(1024);
+        RecvBuffer recvBuffer = new RecvBuffer(65535);
 
         object _lock = new object(); // 멀티 쓰레드 환경에서 동기화 문제를 해결하기 위해 사용
 
@@ -162,7 +163,19 @@ namespace ServerCore
                 }
             }
         }
-
+        public void Send(List<ArraySegment<byte>> sendbufferlist)
+        {
+            if (sendbufferlist.Count == 0) return;
+            lock (_lock)
+            {
+                foreach(ArraySegment<byte> buffer in sendbufferlist)
+                    sendQueue.Enqueue(buffer);
+                if (pendinglist.Count() == 0)
+                {
+                    RegisterSend();
+                }
+            }
+        }
 
         void RegisterSend()
         {

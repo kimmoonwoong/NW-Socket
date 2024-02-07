@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "5+vVnunAXUwYKBjVh0JJ0y6GG7hvCbhLjA5K+VAk3V9Wj7QIiBMTzmC0B51zN89wZRo23m6QMDZG5ZqRpbeAuA==",
+  "dgSpecHash": "287e/vYYuH0/g4xuUJjZ3D+1GmE4PVh4shcYd/qTDjCSOawOWzT9ngkKwedLJPmAy6aA8h9JSqIwnAlFK66dow==",
   "success": true,
-  "projectFilePath": "C:\\Users\\ansdn\\source\\repos\\Server\\DummyClient\\DummyClient.csproj",
+  "projectFilePath": "C:\\Users\\user\\NW-Socket-GameServer\\Server\\DummyClient\\DummyClient.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

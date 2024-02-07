@@ -27,19 +27,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ansdn\\.nuget\\packages\\": {}
+    "C:\\Users\\user\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ansdn\\source\\repos\\Server\\Server\\Server.csproj",
+      "projectUniqueName": "C:\\Users\\user\\NW-Socket-GameServer\\Server\\Server\\Server.csproj",
       "projectName": "Server",
-      "projectPath": "C:\\Users\\ansdn\\source\\repos\\Server\\Server\\Server.csproj",
-      "packagesPath": "C:\\Users\\ansdn\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ansdn\\source\\repos\\Server\\Server\\obj\\",
+      "projectPath": "C:\\Users\\user\\NW-Socket-GameServer\\Server\\Server\\Server.csproj",
+      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\user\\NW-Socket-GameServer\\Server\\Server\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\ansdn\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -53,8 +53,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\ansdn\\source\\repos\\Server\\ServerCore\\ServerCore.csproj": {
-              "projectPath": "C:\\Users\\ansdn\\source\\repos\\Server\\ServerCore\\ServerCore.csproj"
+            "C:\\Users\\user\\NW-Socket-GameServer\\Server\\ServerCore\\ServerCore.csproj": {
+              "projectPath": "C:\\Users\\user\\NW-Socket-GameServer\\Server\\ServerCore\\ServerCore.csproj"
             }
           }
         }
@@ -84,7 +84,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

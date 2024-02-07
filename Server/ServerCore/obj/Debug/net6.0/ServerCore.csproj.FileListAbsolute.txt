@@ -10,3 +10,15 @@ C:\Users\ansdn\source\repos\Server\ServerCore\obj\Debug\net6.0\ServerCore.dll
 C:\Users\ansdn\source\repos\Server\ServerCore\obj\Debug\net6.0\refint\ServerCore.dll
 C:\Users\ansdn\source\repos\Server\ServerCore\obj\Debug\net6.0\ServerCore.pdb
 C:\Users\ansdn\source\repos\Server\ServerCore\obj\Debug\net6.0\ref\ServerCore.dll
+C:\Users\user\NW-Socket-GameServer\Server\ServerCore\obj\Debug\net6.0\ServerCore.csproj.AssemblyReference.cache
+C:\Users\user\NW-Socket-GameServer\Server\ServerCore\obj\Debug\net6.0\ServerCore.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\NW-Socket-GameServer\Server\ServerCore\obj\Debug\net6.0\ServerCore.AssemblyInfoInputs.cache
+C:\Users\user\NW-Socket-GameServer\Server\ServerCore\obj\Debug\net6.0\ServerCore.AssemblyInfo.cs
+C:\Users\user\NW-Socket-GameServer\Server\ServerCore\obj\Debug\net6.0\ServerCore.csproj.CoreCompileInputs.cache
+C:\Users\user\NW-Socket-GameServer\Server\ServerCore\obj\Debug\net6.0\ServerCore.dll
+C:\Users\user\NW-Socket-GameServer\Server\ServerCore\obj\Debug\net6.0\refint\ServerCore.dll
+C:\Users\user\NW-Socket-GameServer\Server\ServerCore\obj\Debug\net6.0\ServerCore.pdb
+C:\Users\user\NW-Socket-GameServer\Server\ServerCore\bin\Debug\net6.0\ServerCore.deps.json
+C:\Users\user\NW-Socket-GameServer\Server\ServerCore\bin\Debug\net6.0\ServerCore.dll
+C:\Users\user\NW-Socket-GameServer\Server\ServerCore\bin\Debug\net6.0\ServerCore.pdb
+C:\Users\user\NW-Socket-GameServer\Server\ServerCore\obj\Debug\net6.0\ref\ServerCore.dll

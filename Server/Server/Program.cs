@@ -13,6 +13,12 @@ namespace Server
         static Listener chainglistener = new Listener();
         static Listener inventorylistener = new Listener();
         public static GameRoom Room = new GameRoom();
+
+        static public void FlushRoom()
+        {
+            Room.Push(() => Room.Flush());
+            JobTimer.Instance.Push(FlushRoom, 250);
+        }
         static void Main(string[] args)
         {
             
@@ -28,9 +34,12 @@ namespace Server
             chainglistener.init(chatingendPoint, () => { return SessionManager.Instance.Generator(); });
             //inventorylistener.init(inventoryendPoint, () => { return new GameInventorySession(); });
             Console.WriteLine("Listening...");
+
+            FlushRoom();
+
             while (true)
             {
-
+                JobTimer.Instance.Flush();
             }
         }
     }
